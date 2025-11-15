@@ -1,0 +1,40 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "secure-worker",
+  "main": "src/index.js",
+  "compatibility_date": "2025-11-15",
+  "observability": {
+    "enabled": true
+  },
+  
+  /**
+   * R2 Bucket Binding
+   * Binds the country-flags R2 bucket to Worker
+   * Access it in code via: env.COUNTRY_FLAGS
+   */
+  "r2_buckets": [
+    {
+      "binding": "COUNTRY_FLAGS",
+      "bucket_name": "country-flags",
+      "preview_bucket_name": "country-flags-preview"
+    }
+  ],
+
+  /**
+   * Routes Configuration
+   * Worker to intercept /secure* paths
+   * zone_name: domain name
+   * pattern: URL pattern to match
+   */
+  "routes": [
+    {
+      "pattern": "tunnel.peterawe-cf.shop/secure*",
+      "zone_name": "peterawe-cf.shop",
+      "custom_domain": false
+    }
+  ]
+}
